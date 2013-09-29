@@ -41,19 +41,15 @@
 			},
 			detectCollision: function(canvas,objs){
 				//Check if canvas borders are collided.
-				var bounce = {
-					x:0,
-					y:0
-				};
 				
 				if(this.x <= (ball.width/2) + 30){
-					if(Math.pow(Math.pow(peddles[0].y - this.y ,2),0.5) <= (peddles[0].height/2) + (this.y/2) )
+					if(peddles[0].y + (peddles[0].height/2) > this.y && peddles[0].y - (peddles[0].height/2) < this.y)
 					{
 						this.vx = 1;
 					}
 				}
 				else if(this.x >= ((width - 30) - (ball.width/2))){
-					if(Math.pow(Math.pow(peddles[1].y - this.y ,2),0.5) <= (peddles[0].height/2) + (this.y/2) )
+					if(peddles[1].y + (peddles[1].height/2) > this.y && peddles[1].y - (peddles[1].height/2) < this.y)
 					{
 						this.vx = -1;
 					}
