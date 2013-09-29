@@ -4,7 +4,7 @@
 		<title>Ping Pong</title>
 		<style>
 			canvas{
-			border: 1px solid red;
+			border: 1px dotted red;
 		}
 		</style>
 		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
@@ -17,29 +17,27 @@
 		var ctx = gameCanvas.getContext('2d');
 		var height = gameCanvas.height;
 		var width = gameCanvas.width;
+		var keysDown = {};
 		var ball = {
 			x: 0,
 			y: 0,
 			height: 30,
 			width: 30,
 			color: '#ffffff',
-			vx:1,
-			vy:1,
+			vx:1, //vectorX
+			vy:1, //vectorY
 			angle: 0,
-			draw: function(canvas){
-				canvas.fillRect(this.x - (this.width/2),this.y - (this.height/2),this.width,this.height);
+			draw: function(canvas){//drawing function for ball object
+				canvas.fillRect(this.x - (this.width/2),this.y - (this.height/2),this.width,this.height); //ball center point
 			},
-			spin: function(){
-
-			},
-			animate: function(canvas,objs){
+		 	animate: function(canvas,objs){
 				this.detectCollision(canvas,objs);
-				this.x += this.vx;
-				this.y += this.vy;
+				this.x += this.vx; //speed x
+				this.y += this.vy;//speed y
 			},
-			setPosition: function(_x,_y){
-				this.x = _x;
-				this.y = _y;
+			setPosition: function(_x,_y){//setting position on canvas _x,_y parameters
+				this.x = _x; //ball position x
+				this.y = _y; //ball position y
 			},
 			detectCollision: function(canvas,objs){
 				//Check if canvas borders are collided.
@@ -47,9 +45,7 @@
 					x:0,
 					y:0
 				};
-
-
-
+				
 				if(this.x <= (ball.width/2) + 30){
 					if(Math.pow(Math.pow(peddles[0].y - this.y ,2),0.5) <= (peddles[0].height/2) + (this.y/2) )
 					{
@@ -62,26 +58,7 @@
 						this.vx = -1;
 					}
 				}
-				/*else
-				{
-					//Check object collisions
-					for (var i = peddles.length - 1; i >= 0; i--) {
-						var xpos = 1, ypos = 1;
-						var x_distance = (this.x - peddles[i].x);
-						var y_distance = (this.y - peddles[i].y);
-
-						if(Math.pow(Math.pow(x_distance,2),0.5) < (this.width/2 + peddles[i].width/2))
-						{
-							if(Math.pow(Math.pow(y_distance,2),0.5) < (this.height/2 + peddles[i].height/2))
-							{
-								if(x_distance < 0){
-									xpos = -1;
-								}
-							}
-							this.vx = xpos;	
-						}
-					};
-				}*/
+		
 
 				if(this.y <= ball.height/2){
 					this.vy = 1;
@@ -126,6 +103,7 @@
 		}
 
 		function gameLoop(){
+			keyUpdate();
 			gameAction();
 
 			//Clear canvas
@@ -140,27 +118,28 @@
 
 		setInterval(gameLoop,10);
 
-		$(document).keydown(function (event) {
-	      var key = event.which;
-	      	switch(key){
-	      		case 38:
-	      			peddles[1].move(0);
-	      		break;
+		
+		window.addEventListener('keydown', function(e) {
+			    keysDown[e.keyCode] = true;
+		});
+		window.addEventListener('keyup', function(e) {
+			    delete keysDown[e.keyCode];
+		});
 
-	      		case 40:
-	      			peddles[1].move(1);
-	      		break;
-
-	      		case 87:
-	      			peddles[0].move(0);
-	      		break;
-
-	      		case 83:
-	      			peddles[0].move(1);
-	      		break;
-
-	      	}
-	    });
+		function keyUpdate() {
+		    if (87 in keysDown) {
+		        peddles[0].move(0);
+		    }
+		    if (38 in keysDown) {
+		        peddles[1].move(0);
+		    }
+		    if (83 in keysDown) {
+		        peddles[0].move(1);
+		    }
+		    if (40 in keysDown) {
+		        peddles[1].move(1);
+		    }
+		}
 		</script>
 	</body>
 </html>
