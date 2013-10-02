@@ -54,7 +54,16 @@
 						this.vx = -1;
 					}
 				}
-		
+				
+				if(this.x > peddles[1].x + (ball.width/2)){
+					alert("You Missed Game will Be restarted");
+					ball.setPosition(width/2,height/2);
+				}
+
+				if(this.x > peddles[1].x + (ball.width/2) || (this.x < peddles[0].x - (ball.width/2))){
+					alert("You Missed Game will Be restarted");
+					ball.setPosition(width/2,height/2);
+				}		
 
 				if(this.y <= ball.height/2){
 					this.vy = 1;
