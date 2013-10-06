@@ -6,18 +6,25 @@
 			canvas{
 			border: 1px dotted red;
 		}
+		#canvas-container{
+			width: 100%;
+			text-align: center;
+		}
 		</style>
 		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 	</head>
 	<body>
+		<div id = "canvas-container">
 		<canvas id="canvas" width="640" height="480">
 		</canvas>
+	</div>
 		<script>
 		var gameCanvas = document.getElementById('canvas');
 		var ctx = gameCanvas.getContext('2d');
 		var height = gameCanvas.height;
 		var width = gameCanvas.width;
 		var keysDown = {};
+		var score1=0,score2=0,miss1=0,miss2=0;
 		var ball = {
 			x: 0,
 			y: 0,
@@ -46,24 +53,37 @@
 					if(peddles[0].y + (peddles[0].height/2) > this.y && peddles[0].y - (peddles[0].height/2) < this.y)
 					{
 						this.vx = 1;
+						score1++;
+						console.log(score1);
 					}
 				}
 				else if(this.x >= ((width - 30) - (ball.width/2))){
 					if(peddles[1].y + (peddles[1].height/2) > this.y && peddles[1].y - (peddles[1].height/2) < this.y)
 					{
 						this.vx = -1;
+						score2++;
+						console.log(score2);
 					}
 				}
-				
-				if(this.x > peddles[1].x + (ball.width/2)){
-					alert("You Missed Game will Be restarted");
+	
+				if(this.x > peddles[1].x + (ball.width/2)){;
+					miss2++;
+					console.log(miss2);
 					ball.setPosition(width/2,height/2);
-				}
-
-				if(this.x > peddles[1].x + (ball.width/2) || (this.x < peddles[0].x - (ball.width/2))){
-					alert("You Missed Game will Be restarted");
-					ball.setPosition(width/2,height/2);
+					//miss1 = 0;
+					//miss2 = 0;
+					score1 = 0;
+					score2 = 0;
 				}		
+				if(this.x < peddles[0].x - (ball.width/2)){
+					miss1++
+					console.log(miss1);
+					ball.setPosition(width/2,height/2);
+					//miss1 = 0;
+					//miss2 = 0;
+					score1 = 0;
+					score2 = 0;
+				}
 
 				if(this.y <= ball.height/2){
 					this.vy = 1;
@@ -85,16 +105,23 @@
 			this.move = function(direction){
 				switch(direction){
 					case 1:
-						this.y += 3;
-					break;
+						if(this.y < 480)
+						{
+							this.y += 3;
+						}							
+						break;
 					case 0:
-						this.y -= 3;
+						if(this.y >	0)
+						{
+							this.y -= 3;
+						}
 					break;
 				}
 			}
 		};
 
 		var peddles = [];
+
 
 		function init(){
 			ball.setPosition(width/2, height/2);
