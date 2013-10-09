@@ -10,14 +10,44 @@
 			width: 100%;
 			text-align: center;
 		}
+		#title-box{
+			border: 1px solid black;
+			width:100%;
+			text-align: center;
+		}
+		#pl1-box{
+			border: 1px solid black;
+		}
+		#pl2-box{
+			border: 1px solid black;
+			width:100%;
+			text-align: right;
+		}
+		#msg-box{
+			border: 1px solid black;
+			width:100%;
+			text-align: center;
+		}
 		</style>
 		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 	</head>
 	<body>
+		<div id = "pl1-box" width="100" height="300">
+			<p>Score1:</p>
+		</div>
+		<div id = "title-box">
+			<p>Title:</p>
+		</div>
 		<div id = "canvas-container">
-		<canvas id="canvas" width="640" height="480">
-		</canvas>
-	</div>
+			<canvas id="canvas" width="640" height="480">
+			</canvas>
+		</div>
+		<div id = "pl2-box">
+			<p>Score2:</p>
+		</div>
+		<div id = "msg-box">
+			<p>Msgbox</p>
+		</div>
 		<script>
 		var gameCanvas = document.getElementById('canvas');
 		var ctx = gameCanvas.getContext('2d');
@@ -66,7 +96,7 @@
 					}
 				}
 	
-				if(this.x > peddles[1].x + (ball.width/2)){;
+				if(this.x > peddles[1].x + (ball.width/2)){
 					miss2++;
 					console.log(miss2);
 					ball.setPosition(width/2,height/2);
@@ -76,7 +106,7 @@
 					score2 = 0;
 				}		
 				if(this.x < peddles[0].x - (ball.width/2)){
-					miss1++
+					miss1++;
 					console.log(miss1);
 					ball.setPosition(width/2,height/2);
 					//miss1 = 0;
