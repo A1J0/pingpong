@@ -12,39 +12,51 @@
 		}
 		#title-box{
 			border: 1px solid black;
-			width:100%;
+			width: 400px;
+			height: 50px;
+			margin-left: 470px;
 			text-align: center;
 		}
 		#pl1-box{
 			border: 1px solid black;
+			width: 140px;
+			height: 150px;
 		}
 		#pl2-box{
 			border: 1px solid black;
-			width:100%;
-			text-align: right;
+			width: 140px;
+			height: 150px;
+			margin-left: 1000px;
 		}
 		#msg-box{
 			border: 1px solid black;
-			width:100%;
+			width: 1040px;
+			height: 50px;
+			margin-left: 100px;
 			text-align: center;
 		}
 		</style>
 		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 	</head>
 	<body>
-		<div id = "pl1-box" width="100" height="300">
-			<p>Score1:</p>
-		</div>
+		<div class="space"></div>
 		<div id = "title-box">
-			<p>Title:</p>
+			<p>THE PING PONG GAME</p>
+		</div>
+		<div class="space"></div>
+		<div id = "pl1-box" width="100" height="300">
+			<p>Player1 score is: <strong data-bind = "text:score1">0</strong></p>
+			<p>Player1 miss count: <strong data-bind = "text:miss1">0</strong></p>
 		</div>
 		<div id = "canvas-container">
 			<canvas id="canvas" width="640" height="480">
 			</canvas>
 		</div>
 		<div id = "pl2-box">
-			<p>Score2:</p>
+			<p>Player2 score is: <strong data-bind = "text:score2">0</strong></p>
+			<p>Player2 miss count: <strong data-bind = "text:miss2">0</strong></p>
 		</div>
+		<div class="space"></div>
 		<div id = "msg-box">
 			<p>Msgbox</p>
 		</div>
@@ -109,6 +121,7 @@
 					miss1++;
 					console.log(miss1);
 					ball.setPosition(width/2,height/2);
+					console.log(Player )
 					//miss1 = 0;
 					//miss2 = 0;
 					score1 = 0;
@@ -202,6 +215,14 @@
 		        peddles[1].move(1);
 		    }
 		}
+
+		//knockout.js
+		function AppViewModel(){
+			this.score1 = ko.observable(score1);
+			this.score2 = ko.observable(score2);
+		}
+
+		ko.applyBindings(new AppViewModel());
 		</script>
 	</body>
 </html>
