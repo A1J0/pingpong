@@ -1,65 +1,48 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 	<head>
 		<title>Ping Pong</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	    <!-- Bootstrap -->
+	    <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
 		<style>
 			canvas{
 			border: 1px dotted red;
 		}
-		#canvas-container{
-			width: 100%;
-			text-align: center;
-		}
-		#title-box{
-			border: 1px solid black;
-			width: 400px;
-			height: 50px;
-			margin-left: 470px;
-			text-align: center;
-		}
-		#pl1-box{
-			border: 1px solid black;
-			width: 140px;
-			height: 150px;
-		}
-		#pl2-box{
-			border: 1px solid black;
-			width: 140px;
-			height: 150px;
-			margin-left: 1000px;
-		}
 		#msg-box{
-			border: 1px solid black;
-			width: 1040px;
-			height: 50px;
-			margin-left: 100px;
+			text-align: center;
+		}
+		.scoreboard{
 			text-align: center;
 		}
 		</style>
 		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+		<script src="js/bootstrap.min.js"></script>
+		<script src="js/ko.js"></script>
 	</head>
 	<body>
-		<div class="space"></div>
-		<div id = "title-box">
-			<p>THE PING PONG GAME</p>
+	<div class="container">
+		<div>
+			<center>
+				<h1>Ping Pong!</h1>
+			</center>
 		</div>
-		<div class="space"></div>
-		<div id = "pl1-box" width="100" height="300">
-			<p>Player1 score is: <strong data-bind = "text:score1">0</strong></p>
-			<p>Player1 miss count: <strong data-bind = "text:miss1">0</strong></p>
-		</div>
-		<div id = "canvas-container">
-			<canvas id="canvas" width="640" height="480">
+		<div class="row">
+			<div class="col-md-3 scoreboard">
+				<p>Player1 score is: <strong data-bind="text:score1"></strong></p>
+				<p>Player1 miss count: <strong data-bind="text:miss1"></strong></p>
+			</div>
+			<canvas class="col-md-6" id="canvas" width="640" height="480">
 			</canvas>
+			<div class="col-md-3 scoreboard">
+				<p>Player2 score is: <strong data-bind="text:score2"></strong></p>
+				<p>Player2 miss count: <strong data-bind="text:miss2"></strong></p>
+			</div>
 		</div>
-		<div id = "pl2-box">
-			<p>Player2 score is: <strong data-bind = "text:score2">0</strong></p>
-			<p>Player2 miss count: <strong data-bind = "text:miss2">0</strong></p>
-		</div>
-		<div class="space"></div>
 		<div id = "msg-box">
 			<p>Msgbox</p>
 		</div>
+	</div>
 		<script>
 		var gameCanvas = document.getElementById('canvas');
 		var ctx = gameCanvas.getContext('2d');
@@ -67,6 +50,7 @@
 		var width = gameCanvas.width;
 		var keysDown = {};
 		var score1=0,score2=0,miss1=0,miss2=0;
+
 		var ball = {
 			x: 0,
 			y: 0,
@@ -75,14 +59,15 @@
 			color: '#ffffff',
 			vx:1, //vectorX
 			vy:1, //vectorY
+			velocity: 1,
 			angle: 0,
 			draw: function(canvas){//drawing function for ball object
 				canvas.fillRect(this.x - (this.width/2),this.y - (this.height/2),this.width,this.height); //ball center point
 			},
 		 	animate: function(canvas,objs){
 				this.detectCollision(canvas,objs);
-				this.x += this.vx; //speed x
-				this.y += this.vy;//speed y
+				this.x += (this.vx * this.velocity) ; //speed x
+				this.y += (this.vy * this.velocity) ;//speed y
 			},
 			setPosition: function(_x,_y){//setting position on canvas _x,_y parameters
 				this.x = _x; //ball position x
@@ -96,7 +81,7 @@
 					{
 						this.vx = 1;
 						score1++;
-						console.log(score1);
+						console.log("score1",score1);
 					}
 				}
 				else if(this.x >= ((width - 30) - (ball.width/2))){
@@ -104,28 +89,28 @@
 					{
 						this.vx = -1;
 						score2++;
-						console.log(score2);
+						console.log("score2",score2);
 					}
 				}
 	
 				if(this.x > peddles[1].x + (ball.width/2)){
 					miss2++;
-					console.log(miss2);
+					console.log("miss2",miss2);
 					ball.setPosition(width/2,height/2);
 					//miss1 = 0;
 					//miss2 = 0;
-					score1 = 0;
-					score2 = 0;
+					// score1 = 0;
+					// score2 = 0;
 				}		
 				if(this.x < peddles[0].x - (ball.width/2)){
 					miss1++;
-					console.log(miss1);
+					console.log("miss1",miss1);
 					ball.setPosition(width/2,height/2);
-					console.log(Player )
+					//console.log(Player )
 					//miss1 = 0;
 					//miss2 = 0;
-					score1 = 0;
-					score2 = 0;
+					// score1 = 0;
+					// score2 = 0;
 				}
 
 				if(this.y <= ball.height/2){
@@ -217,12 +202,12 @@
 		}
 
 		//knockout.js
-		function AppViewModel(){
+		var ViewModel = function(score1,score2){
 			this.score1 = ko.observable(score1);
 			this.score2 = ko.observable(score2);
 		}
 
-		ko.applyBindings(new AppViewModel());
+		ko.applyBindings(new ViewModel(score1, score2));
 		</script>
 	</body>
 </html>
