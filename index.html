@@ -5,9 +5,15 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	    <!-- Bootstrap -->
 	    <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
+	    <link href='http://fonts.googleapis.com/css?family=Electrolize' rel='stylesheet' type='text/css'> 
+	   <audio id="collide" src="audio/dash.mp3"></audio>
 		<style>
 			canvas{
-			border: 1px dotted red;
+				padding: 10px;
+				border: 2px solid #1C498C;
+		}
+		body{
+			font-family: 'Electrolize', sans-serif;
 		}
 		#msg-box{
 			text-align: center;
@@ -15,57 +21,74 @@
 		.scoreboard{
 			text-align: center;
 		}
+		p{
+			font-size: 20px;
+			color: #1C498C;
+		}
+		h1{
+		
+			font-family: 'Electrolize', sans-serif;
+			font-size: 50px;		
+			color: #1C498C;
+		}
 		</style>
+
 		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 		<script src="js/bootstrap.min.js"></script>
 		<script src="js/ko.js"></script>
 	</head>
-	<body>
-	<div class="container">
+	<body style= "background-color: #ddd">
+	<div class="container" style = "padding: 20px;">
 		<div>
 			<center>
 				<h1>Ping Pong!</h1>
 			</center>
 		</div>
-		<div class="row">
-			<div class="col-md-3 scoreboard">
-				<p>Player1 score is: <strong data-bind="text:score1"></strong></p>
-				<p>Player1 miss count: <strong data-bind="text:miss1"></strong></p>
+	<div class="row" style = "padding: 20px;">
+		<div class="col-md-3 scoreboard">
+			<p><b>Player1</b></p>
+				<p><strong data-bind="text:score1"></strong></p>
 			</div>
-			<canvas class="col-md-6" id="canvas" width="640" height="480">
+	<canvas class="col-md-6" id="canvas" width="640" height="480">
 			</canvas>
-			<div class="col-md-3 scoreboard">
-				<p>Player2 score is: <strong data-bind="text:score2"></strong></p>
-				<p>Player2 miss count: <strong data-bind="text:miss2"></strong></p>
+	<div class="col-md-3 scoreboard">
+			<center>
+				<p><b>Player2</b></p>
+				<p><strong data-bind="text:score2"></strong></p>
+			</center>
 			</div>
-		</div>
-		<div id = "msg-box">
-			<p>Msgbox</p>
+	</div>
+		<div id = "msg-box" style = "padding:20px;">
+		<center>
+			<p><b>Msgbox</b></p>
+		</center>
 		</div>
 	</div>
+
 		<script>
 		var gameCanvas = document.getElementById('canvas');
 		var ctx = gameCanvas.getContext('2d');
 		var height = gameCanvas.height;
 		var width = gameCanvas.width;
 		var keysDown = {};
-		var score1=0,score2=0,miss1=0,miss2=0;
-
+		var score1=1,score2=1;
+		
 		var ball = {
 			x: 0,
 			y: 0,
 			height: 30,
 			width: 30,
-			color: '#ffffff',
+			color: "#ff0000",
 			vx:1, //vectorX
 			vy:1, //vectorY
-			velocity: 1,
+			velocity: 2,
 			angle: 0,
 			draw: function(canvas){//drawing function for ball object
 				canvas.fillRect(this.x - (this.width/2),this.y - (this.height/2),this.width,this.height); //ball center point
 			},
 		 	animate: function(canvas,objs){
 				this.detectCollision(canvas,objs);
+				ctx.moveTo(width/2,0)
 				this.x += (this.vx * this.velocity) ; //speed x
 				this.y += (this.vy * this.velocity) ;//speed y
 			},
@@ -79,38 +102,32 @@
 				if(this.x <= (ball.width/2) + 30){
 					if(peddles[0].y + (peddles[0].height/2) > this.y && peddles[0].y - (peddles[0].height/2) < this.y)
 					{
+						//When ball collide with peddle 1
 						this.vx = 1;
-						score1++;
-						console.log("score1",score1);
+						document.getElementById('collide').play();
+						
 					}
 				}
+
 				else if(this.x >= ((width - 30) - (ball.width/2))){
 					if(peddles[1].y + (peddles[1].height/2) > this.y && peddles[1].y - (peddles[1].height/2) < this.y)
 					{
+						//when ball collide with peddle 2
 						this.vx = -1;
-						score2++;
-						console.log("score2",score2);
+						document.getElementById('collide').play();
 					}
 				}
 	
 				if(this.x > peddles[1].x + (ball.width/2)){
-					miss2++;
-					console.log("miss2",miss2);
+					//when peddle 2 miss ball
+					vm.score1(score1++);
 					ball.setPosition(width/2,height/2);
-					//miss1 = 0;
-					//miss2 = 0;
-					// score1 = 0;
-					// score2 = 0;
-				}		
+				}	
+
 				if(this.x < peddles[0].x - (ball.width/2)){
-					miss1++;
-					console.log("miss1",miss1);
+					// when peddle 1 miss ball
+					vm.score2(score2++);
 					ball.setPosition(width/2,height/2);
-					//console.log(Player )
-					//miss1 = 0;
-					//miss2 = 0;
-					// score1 = 0;
-					// score2 = 0;
 				}
 
 				if(this.y <= ball.height/2){
@@ -122,12 +139,14 @@
 			}
 		}
 		var paddel =  function(canvas,x_pos){
-			this.color = "#ffffff";
+
+			this.color = '#FFFFFF'
 			this.height = 120;
 			this.width = 30;
 			this.x = x_pos;
 			this.y = this.height/2;
 			this.draw = function (){
+				canvas.fillStyle="#1C498C";
 				canvas.fillRect(this.x - (this.width/2),this.y - (this.height/2),this.width,this.height);
 			},
 			this.move = function(direction){
@@ -202,12 +221,14 @@
 		}
 
 		//knockout.js
-		var ViewModel = function(score1,score2){
-			this.score1 = ko.observable(score1);
-			this.score2 = ko.observable(score2);
+		function ViewModel(){
+			this.score1 = ko.observable("0");
+			this.score2 = ko.observable("0");
 		}
 
-		ko.applyBindings(new ViewModel(score1, score2));
+		window.vm = new ViewModel();
+		ko.applyBindings(vm);
+
 		</script>
 	</body>
 </html>
